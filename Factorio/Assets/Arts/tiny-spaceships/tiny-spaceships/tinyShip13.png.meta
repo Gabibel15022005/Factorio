@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: dd0f3aafa5d51ee4d9ad8b3d3dc74aaa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3804527615242426505
+    second: tinyShip13_0
+  - first:
+      213: 5034457280715040762
+    second: tinyShip13_1
+  - first:
+      213: -5924536125525898918
+    second: tinyShip13_2
+  - first:
+      213: -7122992347185084261
+    second: tinyShip13_3
+  - first:
+      213: 4306283911101407328
+    second: tinyShip13_4
+  - first:
+      213: -629850086933789100
+    second: tinyShip13_5
+  - first:
+      213: -7241501039928413202
+    second: tinyShip13_6
+  - first:
+      213: -5268285356317190295
+    second: tinyShip13_7
+  - first:
+      213: -3687898953994758317
+    second: tinyShip13_8
+  - first:
+      213: -4899607015742156358
+    second: tinyShip13_9
+  - first:
+      213: 977610662664057187
+    second: tinyShip13_10
+  - first:
+      213: -5251898420000485845
+    second: tinyShip13_11
+  - first:
+      213: -4601126644792527970
+    second: tinyShip13_12
+  - first:
+      213: 3500405360493432466
+    second: tinyShip13_13
+  - first:
+      213: -6802942851302364232
+    second: tinyShip13_14
+  - first:
+      213: -5723074525609722056
+    second: tinyShip13_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: tinyShip13_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 45
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 777af4b8a4a933bc0800000000000000
+      internalID: -3804527615242426505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af726ed193cfdd540800000000000000
+      internalID: 5034457280715040762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_2
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a594f0b88c1d7cda0800000000000000
+      internalID: -5924536125525898918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_3
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b980530133c062d90800000000000000
+      internalID: -7122992347185084261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_4
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 060ed27c66ef2cb30800000000000000
+      internalID: 4306283911101407328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_5
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 456009adea25247f0800000000000000
+      internalID: -629850086933789100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_6
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee3f17adb25018b90800000000000000
+      internalID: -7241501039928413202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_7
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 44
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9675259816a43e6b0800000000000000
+      internalID: -5268285356317190295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_8
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 44
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3579b9fc073f1dcc0800000000000000
+      internalID: -3687898953994758317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_9
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 45
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab15dafd069110cb0800000000000000
+      internalID: -4899607015742156358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_10
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 40
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 361b9b4d7bb219d00800000000000000
+      internalID: 977610662664057187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_11
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 40
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2e8f6776328d17b0800000000000000
+      internalID: -5251898420000485845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4
+        width: 37
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e937e82c1b38520c0800000000000000
+      internalID: -4601126644792527970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_13
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 5
+        width: 38
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29e85122120f39030800000000000000
+      internalID: 3500405360493432466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_14
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 5
+        width: 38
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bbe6d035871791a0800000000000000
+      internalID: -6802942851302364232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tinyShip13_15
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 4
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83ff1f58a0e8390b0800000000000000
+      internalID: -5723074525609722056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      tinyShip13_0: -3804527615242426505
+      tinyShip13_1: 5034457280715040762
+      tinyShip13_10: 977610662664057187
+      tinyShip13_11: -5251898420000485845
+      tinyShip13_12: -4601126644792527970
+      tinyShip13_13: 3500405360493432466
+      tinyShip13_14: -6802942851302364232
+      tinyShip13_15: -5723074525609722056
+      tinyShip13_2: -5924536125525898918
+      tinyShip13_3: -7122992347185084261
+      tinyShip13_4: 4306283911101407328
+      tinyShip13_5: -629850086933789100
+      tinyShip13_6: -7241501039928413202
+      tinyShip13_7: -5268285356317190295
+      tinyShip13_8: -3687898953994758317
+      tinyShip13_9: -4899607015742156358
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

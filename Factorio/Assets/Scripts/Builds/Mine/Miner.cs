@@ -2,25 +2,50 @@ using UnityEngine;
 
 public class Miner : CreatorBuilding
 {
-    public ResourceData resourceType;
+    [Header("Mining Settings")]
     public float mineInterval = 1f;
-    public int amountPerMine = 1;
-
     private float timer = 0f;
 
     void Update()
     {
-        timer += Time.deltaTime;
+        // Tick logique : permet d’étendre facilement à d’autres créateurs plus complexes
+        TickProduce(Time.deltaTime);
+        TickTransfer(Time.deltaTime);
+    }
+
+    protected override void TickProduce(float deltaTime)
+    {
+        timer += deltaTime;
+
         if (timer >= mineInterval)
         {
             timer = 0f;
-            Mine();
+            TryProduce();
         }
     }
 
-    void Mine()
+    public override void Refresh()
     {
-        Resource resource = SpawnResource(resourceType, transform.position);
-        Debug.Log($"Mined {amountPerMine} {resourceType}");
+        outputConveyors.Clear();
+
+        foreach (CheckPos check in outputChecks)
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(check.CheckArea.position, size, interactLayer);
+
+            foreach (Collider2D collid in colliders)
+            {
+                if (collid.TryGetComponent(out Conveyor conveyor))
+                {
+                    conveyor.spawnPos = check.SpawnArea;
+                    if (!outputConveyors.Contains(conveyor))
+                        outputConveyors.Add(conveyor);
+                }
+            }
+        }
+    }
+
+    public override void RefreshNeighbors()
+    {
+        base.RefreshNeighbors();
     }
 }

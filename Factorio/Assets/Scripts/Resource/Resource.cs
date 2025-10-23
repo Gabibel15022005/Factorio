@@ -5,23 +5,19 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     public ResourceData scriptable;
+    public bool passedByCenter = false;
+    [HideInInspector] public Conveyor CurrentConveyor { get; set; }
+    public bool canBeTaken = true;
     void Start()
     {
         GetComponent<SpriteRenderer>().sprite = scriptable.sprite;
     }
 }
 
-[CreateAssetMenu(menuName = "Resource/ResourceData")]
-public class ResourceData : ScriptableObject
-{
-    public ResourceType resourceName;
-    public GameObject resourcePrefab;
-    public Sprite sprite;
-}
-
 public enum ResourceType  // CHANGE TYPE LATER
 {
     Iron,
     Stone,
-    Gold
+    Gold,
+    Blood
 }

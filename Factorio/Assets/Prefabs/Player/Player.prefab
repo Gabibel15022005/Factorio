@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8461103289836330579}
   - component: {fileID: 1864197720418998501}
   - component: {fileID: 1040247868802991028}
+  - component: {fileID: 5059857314595538483}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -84,7 +85,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: -8722190366360396187, guid: 45712d6b16baf6a44befc208556336f6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -165,7 +166,7 @@ LineRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 10
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
@@ -372,17 +373,53 @@ MonoBehaviour:
     m_ActionId: 9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5059857314595538483}
+        m_TargetAssemblyTypeName: BuildingPlacer, Assembly-CSharp
+        m_MethodName: OnPlaceBuilding
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 77a4ee82-e596-4983-b831-d3dca54dfe5d
-    m_ActionName: 'Player/LeftClick[/Mouse/leftButton]'
+    m_ActionName: 'Player/Click[/Mouse/leftButton]'
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 1c929f5c-3d14-419b-8714-5799d76fc69c
-    m_ActionName: 'Player/RightClick[/Mouse/rightButton]'
-  - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5059857314595538483}
+        m_TargetAssemblyTypeName: BuildingPlacer, Assembly-CSharp
+        m_MethodName: OnRotateBuilding
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 364a4c88-97e0-42ab-9723-3089f150f899
     m_ActionName: 'Player/Rotate[/Keyboard/r]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5059857314595538483}
+        m_TargetAssemblyTypeName: BuildingPlacer, Assembly-CSharp
+        m_MethodName: OnRemoveBuilding
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1c929f5c-3d14-419b-8714-5799d76fc69c
+    m_ActionName: 'Player/RightClick[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -420,3 +457,21 @@ MonoBehaviour:
   followSmoothness: 50
   retractSpeed: 15
   player: {fileID: 1864197720418998501}
+--- !u!114 &5059857314595538483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4140020572257283712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc0988d399f752c4b88218bb559a74a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacer
+  gridManager: {fileID: 0}
+  buildingToPlace: {fileID: 11400000, guid: a83cd727e5054ea438df6cd9a99cb51b, type: 2}
+  cam: {fileID: 0}
+  validColor: {r: 0, g: 1, b: 0, a: 0.5}
+  invalidColor: {r: 1, g: 0, b: 0, a: 0.5}
+  placeInterval: 0.01

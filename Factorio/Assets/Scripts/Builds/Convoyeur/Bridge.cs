@@ -20,8 +20,8 @@ public class Bridge : Conveyor
 
     [Header("Debug")]
     [SerializeField] private BridgeState currentState = BridgeState.Research;
-    private Bridge linkedBridge;     // Le bridge lié si on en a un
-    private Bridge detectedBridge;   // Bridge détecté (pour gizmo)
+    private Bridge linkedBridge;
+    private Bridge detectedBridge;
 
     void Awake()
     {
@@ -30,7 +30,6 @@ public class Bridge : Conveyor
 
     protected override void Update()
     {
-        // Déplacement des ressources
         base.Update();
 
         switch (currentState)
@@ -43,7 +42,7 @@ public class Bridge : Conveyor
                 if (linkedBridge == null)
                     ResetBridgeConnection();
                 else
-                    nextConveyor = linkedBridge; // Force le lien pour MoveResources
+                    nextConveyor = linkedBridge;
                 break;
 
             case BridgeState.Conveyor:
@@ -53,84 +52,91 @@ public class Bridge : Conveyor
         }
     }
 
-    /// <summary>
-    /// Recherche un autre Bridge valide en ligne droite, en sautant les Convery invalide
-    /// </summary>
-    private void TryFindBridge()
+private void TryFindBridge()
+{
+    if (gridManagerRef == null)
+        return;
+
+    detectedBridge = null;
+    nextConveyor = null;
+    linkedBridge = null;
+
+    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+    Vector2Int forwardOffset = GetForwardOffset(facingDirection);
+    Vector2Int checkPos = currentPos + forwardOffset;
+
+    for (float d = 1; d <= maxBridgeDistance; d++)
     {
-        if (gridManagerRef == null)
-            return;
-
-        detectedBridge = null;
-        nextConveyor = null;
-        linkedBridge = null;
-
-        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-        Vector2Int forwardOffset = GetForwardOffset();
-        Vector2Int checkPos = currentPos + forwardOffset;
-
-        for (float d = 1; d <= maxBridgeDistance; d++)
+        Building neighbor = gridManagerRef.GetBuildingAt(checkPos);
+        if (neighbor != null)
         {
-            Building neighbor = gridManagerRef.GetBuildingAt(checkPos);
-            if (neighbor != null)
+            if (neighbor is Bridge neighborBridge)
             {
-                // On ne se connecte que si c'est un Bridge
-                if (neighbor is Bridge neighborBridge)
-                {
-                    if (neighborBridge.IsOpposingDirection(facingDirection))
-                        break;
+                // Calcule la direction vers le bridge
+                Vector2Int dirToNeighbor = checkPos - currentPos;
+                Direction dirToBridge = gridManagerRef.VectorToDirection(dirToNeighbor);
 
-                    // Bridge valide trouvé
-                    detectedBridge = neighborBridge;
-                    linkedBridge = neighborBridge;
-                    nextConveyor = neighborBridge;
-
-                    currentState = BridgeState.Bridge;
-
-                    // Informe l'autre bridge qu'il devient Conveyor
-                    neighborBridge.OnLinkedByBridge(this);
+                // Vérifie s’il est orienté vers ce pont (donc opposé)
+                if (neighborBridge.IsOpposingDirection(facingDirection, dirToBridge))
                     break;
-                }
 
-                // Si c'est autre chose qu'un Bridge, on ignore et continue
+                detectedBridge = neighborBridge;
+                linkedBridge = neighborBridge;
+                nextConveyor = neighborBridge;
+
+                currentState = BridgeState.Bridge;
+
+                neighborBridge.OnLinkedByBridge(this);
+                break;
             }
+        }
 
-            checkPos += forwardOffset; // passe à la prochaine case
+        // Continue plus loin sur la même ligne
+        checkPos += forwardOffset;
+    }
+}
+
+public void OnLinkedByBridge(Bridge sourceBridge)
+{
+    // Calcule la direction depuis CE bridge vers l’autre
+    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+    Vector2Int sourcePos = gridManagerRef.GetGridPosition(sourceBridge.transform.position);
+    Vector2Int dirToSource = sourcePos - currentPos;
+    Direction dirToBridge = gridManagerRef.VectorToDirection(dirToSource);
+
+    if (IsOpposingDirection(sourceBridge.facingDirection, dirToBridge))
+        return;
+
+    linkedBridge = sourceBridge;
+    currentState = BridgeState.Conveyor;
+
+    TryFindNextConveyor();
+}
+
+private void TryFindNextConveyor()
+{
+    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+    Vector2Int forwardOffset = GetForwardOffset(facingDirection);
+    Vector2Int nextPos = currentPos + forwardOffset;
+
+    Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
+    Conveyor nextConv = neighbor as Conveyor;
+
+    if (nextConv != null)
+    {
+        // Direction vers le voisin
+        Vector2Int dirToNeighbor = nextPos - currentPos;
+        Direction dirToNext = gridManagerRef.VectorToDirection(dirToNeighbor);
+
+        if (!nextConv.IsOpposingDirection(facingDirection, dirToNext))
+        {
+            nextConveyor = nextConv;
+            return;
         }
     }
 
-    /// <summary>
-    /// Appelé lorsqu'un autre bridge nous détecte
-    /// </summary>
-    public void OnLinkedByBridge(Bridge sourceBridge)
-    {
-        if (IsOpposingDirection(sourceBridge.facingDirection))
-            return;
-
-        linkedBridge = sourceBridge;
-        currentState = BridgeState.Conveyor;
-
-        TryFindNextConveyor();
-    }
-
-    /// <summary>
-    /// Cherche un conveyor valide devant le bridge
-    /// </summary>
-    private void TryFindNextConveyor()
-    {
-        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-        Vector2Int forwardOffset = GetForwardOffset();
-        Vector2Int nextPos = currentPos + forwardOffset;
-
-        Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
-        Conveyor nextConv = neighbor as Conveyor;
-
-        if (nextConv != null && !nextConv.IsOpposingDirection(facingDirection))
-            nextConveyor = nextConv;
-        else
-            nextConveyor = null;
-    }
-
+    nextConveyor = null;
+}
     private void ResetBridgeConnection()
     {
         linkedBridge = null;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Routeur : Conveyor
 {
     private List<Conveyor> validNextConveyors = new List<Conveyor>();
-    private int currentIndex = 0; // round-robin
+    private int currentIndex = 0;
 
     public override void Refresh()
     {
@@ -16,33 +16,17 @@ public class Routeur : Conveyor
         validNextConveyors.Clear();
         if (gridManagerRef == null) return;
 
-        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+        var convsNearby = GetAllValidConveyorNearby();
 
-        // Vérifie les 4 directions autour
-        Vector2Int[] offsets = new Vector2Int[]
+        foreach (var convDetected in convsNearby)
         {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
+            Conveyor conv = convDetected.Value;
+            if (conv == null) continue;
 
-        foreach (Vector2Int offset in offsets)
-        {
-            Building neighbor = gridManagerRef.GetBuildingAt(currentPos + offset);
-            Conveyor neighborConv = neighbor as Conveyor;
-            if (neighborConv == null) continue;
-
-            // 🧭 Vérifie si le voisin pointe vers le routeur (à éviter)
-            Vector2Int dirFromNeighbor = neighborConv.GetForwardOffset();
-            if (dirFromNeighbor == -offset)
-                continue; // ce convoyeur envoie vers le routeur → on l'ignore
-
-            // Sinon, c’est un convoyeur valide pour sortie
-            validNextConveyors.Add(neighborConv);
+            validNextConveyors.Add(conv);
         }
 
-        nextConveyor = null; // le routeur n’a pas de next unique
+        nextConveyor = null;
     }
 
     protected override void MoveResources()
@@ -53,7 +37,6 @@ public class Routeur : Conveyor
         {
             Resource r = resources[i];
 
-            // Étape 1 : aller au centre
             if (!r.passedByCenter)
             {
                 float distToCenter = Vector3.Distance(r.transform.position, Center);
@@ -73,7 +56,6 @@ public class Routeur : Conveyor
                 }
             }
 
-            // Étape 2 : distribuer la ressource
             if (validNextConveyors.Count > 0)
             {
                 for (int attempt = 0; attempt < validNextConveyors.Count; attempt++)
@@ -98,7 +80,6 @@ public class Routeur : Conveyor
     {
         base.OnDrawGizmos();
 
-        // 🔹 Visualisation des sorties
         Gizmos.color = Color.magenta;
         if (validNextConveyors != null)
         {

@@ -8,7 +8,8 @@ public enum TileType
     Normal,
     Water,
     Mountain,
-    Sand
+    Sand,
+    Lava
 }
 
 public class GridManager : MonoBehaviour
@@ -121,8 +122,6 @@ public class GridManager : MonoBehaviour
 
         return building;
     }
-    
-    
 
     private IEnumerator DelayedRefresh(Building building)
     {
@@ -130,7 +129,14 @@ public class GridManager : MonoBehaviour
         building.RefreshNeighbors();
     }
 
-
+    public Direction VectorToDirection(Vector2Int offset)
+    {
+        if (offset == Vector2Int.up) return Direction.Haut;
+        if (offset == Vector2Int.down) return Direction.Bas;
+        if (offset == Vector2Int.left) return Direction.Gauche;
+        if (offset == Vector2Int.right) return Direction.Droite;
+        return Direction.Any;
+    }
 
     public Vector2Int GetGridPosition(Vector3 worldPos)
     {

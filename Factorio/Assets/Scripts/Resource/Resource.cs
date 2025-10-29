@@ -7,7 +7,9 @@ public class Resource : MonoBehaviour
     public ResourceData scriptable;
     public bool passedByCenter = false;
     [HideInInspector] public Conveyor CurrentConveyor { get; set; }
-    public bool canBeTaken = true;
+    
+    [HideInInspector] public bool canBeTaken = true;
+    public bool cameFromHorizontal;
     void Start()
     {
         GetComponent<SpriteRenderer>().sprite = scriptable.sprite;

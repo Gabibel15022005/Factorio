@@ -1,12 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Conveyor : Building
 {
+#region Variable
     [Header("Conveyor Settings")]
     public float speed = 2f; // Vitesse de déplacement des ressources
     protected List<Resource> resources = new();
-    public int resourcesCount => resources.Count;
+    public virtual int resourcesCount => resources.Count;
 
     [Header("Resource Management")]
     public int maxResources = 3; // Limite max de ressources sur ce convoyeur
@@ -23,6 +25,10 @@ public class Conveyor : Building
     public Color gizmoColor = Color.cyan;
 
     protected Vector3 Center => transform.position;
+    
+    protected bool needsUpdate = false;
+
+#endregion
 
     protected virtual void OnDestroy()
     {
@@ -35,9 +41,13 @@ public class Conveyor : Building
 
     protected virtual void Update()
     {
+        if (!needsUpdate) return;
         MoveResources();
-    }
 
+        // Si plus aucune ressource n’est présente, on désactive les updates
+        if (resourcesCount == 0)
+            needsUpdate = false;
+    }
 
     protected virtual void MoveResources()
     {
@@ -66,9 +76,6 @@ public class Conveyor : Building
 
             if (nextConveyor != null)
             {
-                if (nextConveyor.resourcesCount >= nextConveyor.maxResources)
-                    continue;
-
                 Vector3 target = nextConveyor.transform.position;
                 float distToNext = Vector3.Distance(r.transform.position, target);
 
@@ -99,9 +106,20 @@ public class Conveyor : Building
                 }
                 else
                 {
-                    nextConveyor.AddResource(r);
-                    resources.RemoveAt(i);
-                    i--;
+                    // On essaye d'ajouter la ressource au prochain conveyor.
+                    // AddResource renvoie true si elle est acceptée.
+                    bool accepted = nextConveyor.AddResource(r);
+                    if (accepted)
+                    {
+                        resources.RemoveAt(i);
+                        i--;
+                    }
+                    else
+                    {
+                        // si non acceptée, on ne supprime pas la ressource et elle restera au centre
+                        // tu peux décommenter pour debug :
+                        // Debug.Log($"{name} : next conveyor {nextConveyor.name} refused resource {r.name}");
+                    }
                 }
             }
             else
@@ -111,38 +129,45 @@ public class Conveyor : Building
         }
     }
 
-    public virtual void AddResource(Resource resource)
+    // Maintenant renvoie true si la ressource a été ajoutée.
+    public virtual bool AddResource(Resource resource)
     {
         if (resources.Count >= maxResources)
-            return;
+            return false;
 
         resource.canBeTaken = canRessourceBeTaken;
         resource.CurrentConveyor = this;
         resource.passedByCenter = false;
         resources.Add(resource);
+
+        needsUpdate = true;
+        return true;
     }
 
     public virtual void RemoveResource(Resource resource)
     {
-        Debug.Log($"RemoveResource{resource.gameObject.name}");
         resources.Remove(resource);
         resource.CurrentConveyor = null;
+
+        if (resources.Count == 0)
+            needsUpdate = false;
     }
     
     protected virtual void UpdateNextConveyor()
     {
         if (gridManagerRef == null) return;
 
-        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-        Vector2Int forwardOffset = GetForwardOffset();
-        Vector2Int nextPos = currentPos + forwardOffset;
-
-        Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
-        Conveyor neighborConveyor = neighbor as Conveyor;
+        Conveyor neighborConveyor = GetConveyorByDirection(facingDirection);
 
         if (neighborConveyor != null)
         {
-            if (!neighborConveyor.IsOpposingDirection(facingDirection))
+            Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+            Vector2Int neighborPos = gridManagerRef.GetGridPosition(neighborConveyor.transform.position);
+            Vector2Int offset = neighborPos - currentPos;
+
+            Direction dirToNeighbor = gridManagerRef.VectorToDirection(offset);
+
+            if (!neighborConveyor.IsOpposingDirection(facingDirection, dirToNeighbor))
             {
                 nextConveyor = neighborConveyor;
 
@@ -166,22 +191,78 @@ public class Conveyor : Building
         }
     }
 
-    public virtual Vector2Int GetForwardOffset()
+    public virtual Vector2Int GetForwardOffset(Direction dirToCheck)
     {
-        return facingDirection switch
+        return dirToCheck switch
         {
             Direction.Haut => Vector2Int.up,
             Direction.Bas => Vector2Int.down,
             Direction.Droite => Vector2Int.right,
             Direction.Gauche => Vector2Int.left,
-            Direction.Any => Vector2Int.zero, // Aucun déplacement, ou défini selon ton besoin
+            Direction.Any => Vector2Int.zero,
             _ => Vector2Int.right
         };
     }
 
-    public override void RefreshNeighbors()
+    public virtual Conveyor GetConveyorByDirection(Direction dirToCheck)
     {
-        base.RefreshNeighbors();
+        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+        Vector2Int forwardOffset = GetForwardOffset(dirToCheck);
+        Vector2Int nextPos = currentPos + forwardOffset;
+
+        Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
+        Conveyor neighborConveyor = neighbor as Conveyor;
+
+        return neighborConveyor;
+    }
+
+    public virtual Dictionary<Direction, Conveyor> GetAllConveyorNearby()
+    {
+        var result = new Dictionary<Direction, Conveyor>();
+
+        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        {
+            if (dir == Direction.Any) continue;
+
+            Conveyor conv = GetConveyorByDirection(dir);
+            if (conv != null)
+                result.Add(dir, conv);
+        }
+
+        return result;
+    }
+
+    public virtual Dictionary<Direction, Conveyor> GetAllValidConveyorNearby()
+    {
+        var result = new Dictionary<Direction, Conveyor>();
+
+        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        {
+            if (dir == Direction.Any) continue;
+
+            Conveyor conv = GetConveyorByDirection(dir);
+            if (conv != null && !IsOpposingDirection(conv.facingDirection, dir))
+                result.Add(dir, conv);
+        }
+
+        return result;
+    }
+
+    public virtual Dictionary<Direction, Conveyor> GetAllOpposingConveyorNearby()
+    {
+        var result = new Dictionary<Direction, Conveyor>();
+
+        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        {
+            if (dir == Direction.Any) continue;
+
+            Conveyor conv = GetConveyorByDirection(dir);
+
+            if (conv != null && IsOpposingDirection(conv.facingDirection, dir))
+                result.Add(dir, conv);
+        }
+
+        return result;
     }
 
     public override void Refresh()
@@ -203,7 +284,10 @@ public class Conveyor : Building
         // Visualisation des ressources
         Gizmos.color = Color.yellow;
         foreach (var r in resources)
-            Gizmos.DrawSphere(r.transform.position, 0.05f);
+        {
+            if (r != null)
+                Gizmos.DrawSphere(r.transform.position, 0.05f);
+        }
     }
 #endif
 }

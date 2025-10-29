@@ -222,6 +222,10 @@ public class BuildingPlacer : MonoBehaviour
             {
                 building.facingDirection = RotationToDirection(rotation);
             }
+            else if (building != null && building.facingDirection == Direction.Any)
+            {
+                building.transform.rotation = new Quaternion(0,0,0,0);
+            }
         }
     }
 

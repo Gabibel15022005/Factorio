@@ -2,6 +2,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 public abstract class Building : MonoBehaviour
 {
+    #region  Variables
+
     [Header("Health Variables")]
     [SerializeField] private int maxHp = 10;
     [SerializeField] private int hp;
@@ -15,19 +17,23 @@ public abstract class Building : MonoBehaviour
 
     [Space(20)]
     [Header("Refresh nearby Variable")]
-    [SerializeField] Vector2 refreshRange;
+    [SerializeField] Vector2 refreshRange = new Vector2(2,2);
     public Color refreshRangeColor = Color.red;
 
     [Space(20)]
     [Header("Direction Variable")]
     public Direction facingDirection;
 
-
-    protected virtual void Start()
+    #endregion
+    protected virtual void Start() { hp = maxHp; }
+    public void SetGridManagerRef(GridManager refGrid) { gridManagerRef = refGrid; }
+    public virtual void DestroyBuilding()
     {
-        hp = maxHp;
+        Debug.Log($"Destroy : {gameObject.name}");
+        Destroy(gameObject);
     }
 
+    #region Health Function
     public virtual void TakeDamage(int damage)
     {
         hp -= damage;
@@ -38,12 +44,10 @@ public abstract class Building : MonoBehaviour
         hp += heal;
         if (hp > maxHp) hp = maxHp;
     }
+    
+    #endregion
 
-    public void SetGridManagerRef(GridManager refGrid)
-    {
-        gridManagerRef = refGrid;
-    }
-
+    #region Refresh Function
     public virtual void RefreshNeighbors()
     {
         if (gridManagerRef == null) return;
@@ -65,42 +69,41 @@ public abstract class Building : MonoBehaviour
 
     public abstract void Refresh();
 
-    public void SetBuildingSize(Vector2Int size)
+    #endregion
+    
+    #region BuildingSize Function
+    public void SetBuildingSize(Vector2Int size) { buildingSize = size; }
+    public Vector2Int GetBuildingSize() { return buildingSize; }
+    
+    #endregion
+    
+    #region Direction
+    public bool IsOpposingDirection(Direction otherDir, Direction dirToOther)
     {
-        buildingSize = size;
-    }
-
-    public Vector2Int GetBuildingSize()
-    {
-        return buildingSize;
-    }
-
-    public bool IsOpposingDirection(Direction direction)
-    {
-        if (direction == Direction.Any || facingDirection == Direction.Any)
-            return false; // "Any" n'est jamais opposé
-
-        switch (facingDirection)
+        if (facingDirection == Direction.Any)
         {
-            case Direction.Haut:
-                return direction == Direction.Bas;
-            case Direction.Bas:
-                return direction == Direction.Haut;
-            case Direction.Droite:
-                return direction == Direction.Gauche;
-            case Direction.Gauche:
-                return direction == Direction.Droite;
-            default:
-                return false;
+            return otherDir == GetOppositeDirection(dirToOther);
         }
+
+        if (otherDir == Direction.Any)
+            return false;
+
+        return GetOppositeDirection(facingDirection) == otherDir;
     }
 
-
-    public virtual void DestroyBuilding()
+    public Direction GetOppositeDirection(Direction dir)
     {
-        Debug.Log($"Destroy : {gameObject.name}");
-        Destroy(gameObject);
+        return dir switch
+        {
+            Direction.Haut => Direction.Bas,
+            Direction.Bas => Direction.Haut,
+            Direction.Droite => Direction.Gauche,
+            Direction.Gauche => Direction.Droite,
+            _ => Direction.Any
+        };
     }
+    
+    #endregion
 
     protected virtual void OnDrawGizmos()
     {

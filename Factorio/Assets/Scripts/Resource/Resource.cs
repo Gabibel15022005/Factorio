@@ -11,8 +11,10 @@ public class Resource : MonoBehaviour
     [HideInInspector] public bool canBeTaken = true;
     public bool cameFromHorizontal;
     
-    void Start() { GetComponent<SpriteRenderer>().sprite = scriptable.sprite; }
-    
+    void Start()
+    {
+        GetComponent<SpriteRenderer>().sprite = scriptable.sprite;
+    }
 }
 
 

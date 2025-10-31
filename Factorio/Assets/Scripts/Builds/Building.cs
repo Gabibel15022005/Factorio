@@ -23,6 +23,8 @@ public abstract class Building : MonoBehaviour
     [Space(20)]
     [Header("Direction Variable")]
     public Direction facingDirection;
+    
+    
 
     #endregion
     protected virtual void Start() { hp = maxHp; }
@@ -101,6 +103,15 @@ public abstract class Building : MonoBehaviour
             Direction.Gauche => Direction.Droite,
             _ => Direction.Any
         };
+    }
+    
+    #endregion
+
+    #region UI
+
+    protected virtual void ShowBuildingUI()
+    {
+        BuildingUI.SendBuildingScript?.Invoke(this);
     }
     
     #endregion

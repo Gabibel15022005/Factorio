@@ -4,28 +4,41 @@ public class Bridge : Conveyor
 {
     public enum BridgeState
     {
-        Research, // Cherche un autre bridge
-        Bridge,   // Sert de lien entre deux bridges
-        Conveyor  // Se comporte comme un conveyor classique
+        Research,
+        Bridge,
+        Conveyor
     }
 
     [Header("Bridge Settings")]
     [Tooltip("Distance maximale en unités monde pour détecter un autre bridge")]
     public float maxBridgeDistance = 5f;
 
+    [Header("Visual Settings")]
+    [Tooltip("LineRenderer utilisé pour visualiser le pont")]
+    public LineRenderer bridgeLineRenderer;
+
     [Header("Gizmo Colors")]
     [SerializeField] private Color rangeGizmoColor = Color.green;
     [SerializeField] private Color connectedGizmoColor = Color.cyan;
     [SerializeField] private Color detectedBridgeColor = Color.red;
+    
+    [Header("Bridge Visual Settings")]
+    [Tooltip("Order in layer temporaire appliqué aux ressources pendant la traversée du pont")]
+    public int bridgeSortingOrder = 10;
 
     [Header("Debug")]
     [SerializeField] private BridgeState currentState = BridgeState.Research;
     private Bridge linkedBridge;
     private Bridge detectedBridge;
+    
 
     void Awake()
     {
         currentState = BridgeState.Research;
+
+        // S'assurer que le LineRenderer est désactivé au départ
+        if (bridgeLineRenderer != null)
+            bridgeLineRenderer.enabled = false;
     }
 
     protected override void Update()
@@ -36,113 +49,146 @@ public class Bridge : Conveyor
         {
             case BridgeState.Research:
                 TryFindBridge();
+                UpdateBridgeLine(false);
                 break;
 
             case BridgeState.Bridge:
                 if (linkedBridge == null)
+                {
                     ResetBridgeConnection();
+                    UpdateBridgeLine(false);
+                }
                 else
+                {
                     nextConveyor = linkedBridge;
+                    UpdateBridgeLine(true);
+                }
                 break;
 
             case BridgeState.Conveyor:
                 if (nextConveyor == null)
                     TryFindNextConveyor();
+
+                UpdateBridgeLine(false);
                 break;
         }
     }
 
-private void TryFindBridge()
-{
-    if (gridManagerRef == null)
-        return;
-
-    detectedBridge = null;
-    nextConveyor = null;
-    linkedBridge = null;
-
-    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-    Vector2Int forwardOffset = GetForwardOffset(facingDirection);
-    Vector2Int checkPos = currentPos + forwardOffset;
-
-    for (float d = 1; d <= maxBridgeDistance; d++)
+    private void TryFindBridge()
     {
-        Building neighbor = gridManagerRef.GetBuildingAt(checkPos);
-        if (neighbor != null)
+        if (gridManagerRef == null)
+            return;
+
+        detectedBridge = null;
+        nextConveyor = null;
+        linkedBridge = null;
+
+        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+        Vector2Int forwardOffset = GetForwardOffset(facingDirection);
+        Vector2Int checkPos = currentPos + forwardOffset;
+
+        for (float d = 1; d <= maxBridgeDistance; d++)
         {
-            if (neighbor is Bridge neighborBridge)
+            Building neighbor = gridManagerRef.GetBuildingAt(checkPos);
+            if (neighbor != null)
             {
-                // Calcule la direction vers le bridge
-                Vector2Int dirToNeighbor = checkPos - currentPos;
-                Direction dirToBridge = gridManagerRef.VectorToDirection(dirToNeighbor);
+                if (neighbor is Bridge neighborBridge)
+                {
+                    Vector2Int dirToNeighbor = checkPos - currentPos;
+                    Direction dirToBridge = gridManagerRef.VectorToDirection(dirToNeighbor);
 
-                // Vérifie s’il est orienté vers ce pont (donc opposé)
-                if (neighborBridge.IsOpposingDirection(facingDirection, dirToBridge))
+                    if (neighborBridge.IsOpposingDirection(facingDirection, dirToBridge))
+                        break;
+
+                    detectedBridge = neighborBridge;
+                    linkedBridge = neighborBridge;
+                    nextConveyor = neighborBridge;
+
+                    currentState = BridgeState.Bridge;
+
+                    neighborBridge.OnLinkedByBridge(this);
                     break;
+                }
+            }
 
-                detectedBridge = neighborBridge;
-                linkedBridge = neighborBridge;
-                nextConveyor = neighborBridge;
+            checkPos += forwardOffset;
+        }
+    }
 
-                currentState = BridgeState.Bridge;
+    public void OnLinkedByBridge(Bridge sourceBridge)
+    {
+        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+        Vector2Int sourcePos = gridManagerRef.GetGridPosition(sourceBridge.transform.position);
+        Vector2Int dirToSource = sourcePos - currentPos;
+        Direction dirToBridge = gridManagerRef.VectorToDirection(dirToSource);
 
-                neighborBridge.OnLinkedByBridge(this);
-                break;
+        if (IsOpposingDirection(sourceBridge.facingDirection, dirToBridge))
+            return;
+
+        linkedBridge = sourceBridge;
+        currentState = BridgeState.Conveyor;
+
+        TryFindNextConveyor();
+    }
+
+    private void TryFindNextConveyor()
+    {
+        Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
+        Vector2Int forwardOffset = GetForwardOffset(facingDirection);
+        Vector2Int nextPos = currentPos + forwardOffset;
+
+        Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
+        Conveyor nextConv = neighbor as Conveyor;
+
+        if (nextConv != null)
+        {
+            Vector2Int dirToNeighbor = nextPos - currentPos;
+            Direction dirToNext = gridManagerRef.VectorToDirection(dirToNeighbor);
+
+            if (!nextConv.IsOpposingDirection(facingDirection, dirToNext))
+            {
+                nextConveyor = nextConv;
+                return;
             }
         }
 
-        // Continue plus loin sur la même ligne
-        checkPos += forwardOffset;
-    }
-}
-
-public void OnLinkedByBridge(Bridge sourceBridge)
-{
-    // Calcule la direction depuis CE bridge vers l’autre
-    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-    Vector2Int sourcePos = gridManagerRef.GetGridPosition(sourceBridge.transform.position);
-    Vector2Int dirToSource = sourcePos - currentPos;
-    Direction dirToBridge = gridManagerRef.VectorToDirection(dirToSource);
-
-    if (IsOpposingDirection(sourceBridge.facingDirection, dirToBridge))
-        return;
-
-    linkedBridge = sourceBridge;
-    currentState = BridgeState.Conveyor;
-
-    TryFindNextConveyor();
-}
-
-private void TryFindNextConveyor()
-{
-    Vector2Int currentPos = gridManagerRef.GetGridPosition(transform.position);
-    Vector2Int forwardOffset = GetForwardOffset(facingDirection);
-    Vector2Int nextPos = currentPos + forwardOffset;
-
-    Building neighbor = gridManagerRef.GetBuildingAt(nextPos);
-    Conveyor nextConv = neighbor as Conveyor;
-
-    if (nextConv != null)
-    {
-        // Direction vers le voisin
-        Vector2Int dirToNeighbor = nextPos - currentPos;
-        Direction dirToNext = gridManagerRef.VectorToDirection(dirToNeighbor);
-
-        if (!nextConv.IsOpposingDirection(facingDirection, dirToNext))
-        {
-            nextConveyor = nextConv;
-            return;
-        }
+        nextConveyor = null;
     }
 
-    nextConveyor = null;
-}
     private void ResetBridgeConnection()
     {
         linkedBridge = null;
         nextConveyor = null;
         detectedBridge = null;
         currentState = BridgeState.Research;
+        UpdateBridgeLine(false);
+    }
+
+    public override bool AddResource(Resource resource)
+    {
+        if (resources.Count >= maxResources)
+            return false;
+        
+        OnResourceExitBridge(resource.gameObject);
+        resource.canBeTaken = canRessourceBeTaken;
+        resource.CurrentConveyor = this;
+        resource.passedByCenter = false;
+        OnResourceEnterBridge(resource.gameObject);
+        resources.Add(resource);
+
+        needsUpdate = true;
+        return true;
+    }
+
+    /// <summary>
+    /// Appelé quand une ressource commence à traverser le pont.
+    /// </summary>
+    public void OnResourceEnterBridge(GameObject resource)
+    {
+        var sr = resource.GetComponent<SpriteRenderer>();
+        if (sr == null) return;
+
+        sr.sortingOrder = bridgeSortingOrder;
     }
 
     protected override void OnDestroy()
@@ -150,6 +196,26 @@ private void TryFindNextConveyor()
         base.OnDestroy();
         if (linkedBridge != null)
             linkedBridge.ResetBridgeConnection();
+
+        UpdateBridgeLine(false);
+    }
+
+    private void UpdateBridgeLine(bool active)
+    {
+        if (bridgeLineRenderer == null)
+            return;
+
+        if (active && linkedBridge != null)
+        {
+            bridgeLineRenderer.enabled = true;
+            bridgeLineRenderer.positionCount = 2;
+            bridgeLineRenderer.SetPosition(0, transform.position);
+            bridgeLineRenderer.SetPosition(1, linkedBridge.transform.position);
+        }
+        else
+        {
+            bridgeLineRenderer.enabled = false;
+        }
     }
 
 #if UNITY_EDITOR
@@ -157,7 +223,6 @@ private void TryFindNextConveyor()
     {
         base.OnDrawGizmos();
 
-        // Ne pas afficher les gizmos de recherche si on est Conveyor
         if (currentState == BridgeState.Conveyor)
         {
             if (nextConveyor != null)
@@ -179,11 +244,9 @@ private void TryFindNextConveyor()
             case 270: dir = Vector3.down; break;
         }
 
-        // Portée de recherche
         Gizmos.color = rangeGizmoColor;
         Gizmos.DrawLine(start, start + dir * maxBridgeDistance);
 
-        // Bridge détecté
         if (detectedBridge != null)
         {
             Gizmos.color = detectedBridgeColor;
@@ -192,7 +255,6 @@ private void TryFindNextConveyor()
             Gizmos.DrawSphere(midpoint, 0.1f);
         }
 
-        // Connexion active
         if (nextConveyor != null)
         {
             Gizmos.color = connectedGizmoColor;

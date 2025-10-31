@@ -134,7 +134,8 @@ public class Conveyor : Building
     {
         if (resources.Count >= maxResources)
             return false;
-
+        
+        OnResourceExitBridge(resource.gameObject);
         resource.canBeTaken = canRessourceBeTaken;
         resource.CurrentConveyor = this;
         resource.passedByCenter = false;
@@ -151,6 +152,22 @@ public class Conveyor : Building
 
         if (resources.Count == 0)
             needsUpdate = false;
+    }
+
+    /// <summary>
+    /// Appelé quand une ressource quitte le pont.
+    /// </summary>
+    public void OnResourceExitBridge(GameObject resource)
+    {
+        var sr = resource.GetComponent<SpriteRenderer>();
+        if (sr == null) return;
+        
+        
+
+        if (resource.TryGetComponent(out OriginalSortingOrder original))
+        {
+            sr.sortingOrder = original.originalSortingOrder;
+        }
     }
     
     protected virtual void UpdateNextConveyor()

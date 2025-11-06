@@ -242,6 +242,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6339113940388433381, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
+    - {fileID: 4477304516214605717, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
+    - {fileID: -5747161017419463647, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 9093191160931868241, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
@@ -283,14 +285,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636bdff200cab504ebc0a5a9641e4a7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Miner
-  maxHp: 10
-  hp: 0
+  initialMaxHp: 10
   refreshRange: {x: 3, y: 3}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
   facingDirection: 0
   resourceData: {fileID: 11400000, guid: 42230398000f7944e8d5399e9c347b44, type: 2}
   amountPerProduce: 1
   maxStoredResources: 10
+  productionInterval: 1
   inputChecks: []
   inputResources: []
   inputInteractLayer:
@@ -306,4 +308,3 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   transferDelay: 0.1
-  mineInterval: 0.5

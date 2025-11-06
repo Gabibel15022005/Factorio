@@ -8,7 +8,6 @@ public class ListRessourcesUI : MonoBehaviour
     [Header("Prefab du module de ressource")]
     public GameObject ressourcesUIPrefab;
 
-    // Liste actuelle des UI instanciées
     private List<RessourcesUI> ressources = new();
 
     /// <summary>
@@ -20,7 +19,6 @@ public class ListRessourcesUI : MonoBehaviour
         foreach (var res in ressources)
             existingDict[res.data] = res;
 
-        // Supprime les UI qui ne sont plus présentes dans la nouvelle liste
         for (int i = ressources.Count - 1; i >= 0; i--)
         {
             RessourcesUI res = ressources[i];
@@ -46,20 +44,18 @@ public class ListRessourcesUI : MonoBehaviour
             return;
         }
 
-        // Synchronisation
         Dictionary<ResourceData, RessourcesUI> existingDict = SyncRessourcesUI(resources);
 
-        // Création / mise à jour
         foreach (var (data, count) in resources)
         {
+            string formatted = FormatNumber(count);
+
             if (existingDict.TryGetValue(data, out RessourcesUI existing))
             {
-                // Met à jour le texte
-                existing.tmpText.text = count.ToString();
+                existing.tmpText.text = formatted;
             }
             else
             {
-                // Instanciation d’un nouveau prefab
                 GameObject go = Instantiate(ressourcesUIPrefab, transform);
                 RessourcesUI newUI = go.GetComponent<RessourcesUI>();
 
@@ -72,7 +68,7 @@ public class ListRessourcesUI : MonoBehaviour
 
                 // Initialise les infos
                 newUI.data = data;
-                newUI.tmpText.text = count.ToString();
+                newUI.tmpText.text = formatted;
 
                 if (newUI.image != null && data.sprite != null)
                     newUI.image.sprite = data.sprite;
@@ -80,5 +76,19 @@ public class ListRessourcesUI : MonoBehaviour
                 ressources.Add(newUI);
             }
         }
+    }
+
+    /// <summary>
+    /// Formate un nombre en version courte : 1,2K / 1,5M
+    /// </summary>
+    private string FormatNumber(int value)
+    {
+        if (value < 1000)
+            return value.ToString();
+
+        if (value < 1_000_000)
+            return (value / 1000f).ToString("0.#") + "K";
+
+        return (value / 1_000_000f).ToString("0.#") + "M";
     }
 }

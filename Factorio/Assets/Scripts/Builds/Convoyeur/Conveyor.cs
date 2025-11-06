@@ -18,16 +18,14 @@ public class Conveyor : Building
     [Header("Connections")]
     public Conveyor nextConveyor;
     public Transform spawnPos;
-    [SerializeField] protected const float centerRange = 0.05f;
-    [SerializeField] protected const float nextConvRange = 0.75f;
+    [SerializeField] protected float centerRange = 0.05f;
+    [SerializeField] protected float nextConvRange = 0.75f;
 
     [Header("Gizmos")]
     public Color gizmoColor = Color.cyan;
 
     protected Vector3 Center => transform.position;
-    
     protected bool needsUpdate = false;
-
 #endregion
 
     protected virtual void OnDestroy()
@@ -44,7 +42,6 @@ public class Conveyor : Building
         if (!needsUpdate) return;
         MoveResources();
 
-        // Si plus aucune ressource n’est présente, on désactive les updates
         if (resourcesCount == 0)
             needsUpdate = false;
     }
@@ -55,6 +52,7 @@ public class Conveyor : Building
         {
             Resource r = resources[i];
 
+            // --- Étape 1 : déplacement vers le centre ---
             if (!r.passedByCenter)
             {
                 float distToCenter = Vector3.Distance(r.transform.position, Center);
@@ -74,11 +72,16 @@ public class Conveyor : Building
                 }
             }
 
+            // --- Étape 2 : déplacement vers le prochain convoyeur ---
             if (nextConveyor != null)
             {
                 Vector3 target = nextConveyor.transform.position;
                 float distToNext = Vector3.Distance(r.transform.position, target);
 
+                // 🔹 Utiliser le nextConvRange du convoyeur cible (et non celui actuel)
+                float targetRange = nextConveyor.nextConvRange;
+
+                // Gestion de l'espacement entre ressources
                 if (i > 0)
                 {
                     Vector3 previousPos = resources[i - 1].transform.position;
@@ -86,7 +89,6 @@ public class Conveyor : Building
 
                     if (distToPrevious < minDistanceBetweenResources)
                     {
-                        // Ralentit légèrement pour garder un espacement fluide
                         r.transform.position = Vector3.MoveTowards(
                             r.transform.position,
                             target,
@@ -96,7 +98,8 @@ public class Conveyor : Building
                     }
                 }
 
-                if (distToNext > nextConvRange)
+                // Déplacement normal vers le prochain convoyeur
+                if (distToNext > targetRange)
                 {
                     r.transform.position = Vector3.MoveTowards(
                         r.transform.position,
@@ -106,19 +109,12 @@ public class Conveyor : Building
                 }
                 else
                 {
-                    // On essaye d'ajouter la ressource au prochain conveyor.
-                    // AddResource renvoie true si elle est acceptée.
+                    // 🔹 Tentative de transfert au prochain convoyeur
                     bool accepted = nextConveyor.AddResource(r);
                     if (accepted)
                     {
                         resources.RemoveAt(i);
                         i--;
-                    }
-                    else
-                    {
-                        // si non acceptée, on ne supprime pas la ressource et elle restera au centre
-                        // tu peux décommenter pour debug :
-                        // Debug.Log($"{name} : next conveyor {nextConveyor.name} refused resource {r.name}");
                     }
                 }
             }
@@ -129,7 +125,6 @@ public class Conveyor : Building
         }
     }
 
-    // Maintenant renvoie true si la ressource a été ajoutée.
     public virtual bool AddResource(Resource resource)
     {
         if (resources.Count >= maxResources)
@@ -162,8 +157,6 @@ public class Conveyor : Building
         var sr = resource.GetComponent<SpriteRenderer>();
         if (sr == null) return;
         
-        
-
         if (resource.TryGetComponent(out OriginalSortingOrder original))
         {
             sr.sortingOrder = original.originalSortingOrder;
@@ -292,13 +285,22 @@ public class Conveyor : Building
     {
         base.OnDrawGizmos();
 
+        // --- Lien vers le convoyeur suivant ---
         if (nextConveyor != null)
         {
             Gizmos.color = gizmoColor;
             Gizmos.DrawLine(transform.position, nextConveyor.transform.position);
         }
 
-        // Visualisation des ressources
+        // --- Visualisation du centerRange ---
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, centerRange);
+
+        // --- Visualisation de SON PROPRE nextConvRange ---
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, nextConvRange);
+
+        // --- Visualisation des ressources ---
         Gizmos.color = Color.yellow;
         foreach (var r in resources)
         {

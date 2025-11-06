@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7137079720321065537}
   - component: {fileID: 2887980027617116612}
   - component: {fileID: 870158366151058170}
+  - component: {fileID: 5247104391993253408}
+  - component: {fileID: 3160400792202953809}
   m_Layer: 6
   m_Name: Bridge Conveyor
   m_TagString: Untagged
@@ -152,8 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b844cec5462604f42941703efa72bc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bridge
-  maxHp: 10
-  hp: 0
+  initialMaxHp: 10
   refreshRange: {x: 2, y: 2}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
   facingDirection: 0
@@ -171,6 +172,7 @@ MonoBehaviour:
   detectedBridgeColor: {r: 1, g: 0, b: 0, a: 1}
   bridgeSortingOrder: 20
   currentState: 0
+  connectedBridges: []
 --- !u!120 &870158366151058170
 LineRenderer:
   serializedVersion: 2
@@ -279,6 +281,40 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!95 &5247104391993253408
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417608195311459667}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b06e42b19a8d8b4dac40f17b13e139c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3160400792202953809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417608195311459667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4136d361c8beb2d48b878088c51af606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SyncAnimComponent
 --- !u!1 &6708139737030864185
 GameObject:
   m_ObjectHideFlags: 0

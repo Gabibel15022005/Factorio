@@ -632,6 +632,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6339113940388433381, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
+    - {fileID: 4477304516214605717, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
+    - {fileID: -5747161017419463647, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 9093191160931868241, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
@@ -668,13 +670,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1bccccfb5b7594b9e86fc7ab098e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Factory
-  maxHp: 10
-  hp: 0
+  initialMaxHp: 10
   refreshRange: {x: 3, y: 3}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
+  facingDirection: 0
   resourceData: {fileID: 11400000, guid: 850791c02adffd2469b9e7494ff6fcdd, type: 2}
   amountPerProduce: 1
   maxStoredResources: 10
+  productionInterval: 1
   inputChecks:
   - checkArea: {fileID: 1199156651811832180}
     spawnArea: {fileID: 2198159852763680056}
@@ -702,7 +705,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   transferDelay: 0.5
-  produceInterval: 1
 --- !u!4 &2412347776904196863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9093191160931868241, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}

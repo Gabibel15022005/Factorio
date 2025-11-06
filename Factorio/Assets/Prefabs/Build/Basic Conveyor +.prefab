@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8930540014953320612}
   - component: {fileID: 6339113940388433381}
   - component: {fileID: 7137079720321065537}
+  - component: {fileID: 7204084228148264192}
+  - component: {fileID: 7193029075882074766}
   m_Layer: 6
   m_Name: Basic Conveyor +
   m_TagString: Untagged
@@ -105,16 +107,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c615a310b762c304780416802afc4956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Conveyor
-  maxHp: 10
-  hp: 0
+  initialMaxHp: 10
   refreshRange: {x: 2, y: 2}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
   facingDirection: 0
   speed: 7
   maxResources: 2
   minDistanceBetweenResources: 0.75
+  canRessourceBeTaken: 1
   nextConveyor: {fileID: 0}
   spawnPos: {fileID: 0}
+  centerRange: 0.05
+  nextConvRange: 0.75
   gizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!61 &7137079720321065537
 BoxCollider2D:
@@ -162,6 +166,40 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &7204084228148264192
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417608195311459667}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b06e42b19a8d8b4dac40f17b13e139c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7193029075882074766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417608195311459667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4136d361c8beb2d48b878088c51af606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SyncAnimComponent
 --- !u!1 &6708139737030864185
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class Miner : CreatorBuilding
 {
-    [Header("Mining Settings")]
-    public float mineInterval = 1f;
-    private float timer = 0f;
-
     void Update()
     {
         // Tick logique : permet d’étendre facilement à d’autres créateurs plus complexes
@@ -15,13 +11,14 @@ public class Miner : CreatorBuilding
 
     protected override void TickProduce(float deltaTime)
     {
-        timer += deltaTime;
+        if (!CanProduce) return;
+        
+        timerRef.Value += deltaTime;
 
-        if (timer >= mineInterval)
-        {
-            timer = 0f;
-            TryProduce();
-        }
+        if (timerRef.Value < protductionIntervalRef.Value) return;
+        
+        timerRef.Value = 0f;
+        TryProduce();
     }
 
     public override void Refresh()
@@ -43,9 +40,5 @@ public class Miner : CreatorBuilding
             }
         }
     }
-
-    public override void RefreshNeighbors()
-    {
-        base.RefreshNeighbors();
-    }
+    
 }

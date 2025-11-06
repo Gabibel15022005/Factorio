@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class Factory : CreatorBuilding
 {
-    [Header("Production Settings")]
-    [SerializeField] private float produceInterval = 1f;
-    private float produceTimer = 0f;
 
     void Update()
     {
@@ -15,10 +12,13 @@ public class Factory : CreatorBuilding
 
     protected override void TickProduce(float deltaTime)
     {
-        produceTimer += deltaTime;
-        if (produceTimer < produceInterval) return;
-        produceTimer = 0f;
-
+        if (!CanProduce) return;
+        
+        timerRef.Value += deltaTime;
+        
+        if (timerRef.Value < protductionIntervalRef.Value) return;
+        
+        timerRef.Value = 0f;
         TryProduce();
     }
 
@@ -40,8 +40,4 @@ public class Factory : CreatorBuilding
         }
     }
 
-    public override void RefreshNeighbors()
-    {
-        base.RefreshNeighbors();
-    }
 }

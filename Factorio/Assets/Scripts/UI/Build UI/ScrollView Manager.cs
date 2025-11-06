@@ -30,7 +30,7 @@ public class ScrollViewManager : MonoBehaviour
         {
             foreach (BuildingData data in category.buildingsOfCategory)
             {
-                PlayerPrefs.SetInt($"{data.buildingName} is unlocked", 1);
+                PlayerPrefs.SetInt($"{data.BuildingName} is unlocked", 1);
             }
         }
 
@@ -60,7 +60,7 @@ public class ScrollViewManager : MonoBehaviour
 
             foreach (BuildingData data in category.buildingsOfCategory)
             {
-                if (PlayerPrefs.HasKey($"{data.buildingName} is unlocked") && PlayerPrefs.GetInt($"{data.buildingName} is unlocked") == 1)
+                if (PlayerPrefs.HasKey($"{data.BuildingName} is unlocked") && PlayerPrefs.GetInt($"{data.BuildingName} is unlocked") == 1)
                 {
                     ButtonBuilding button = Instantiate(buttonBuildingPrefab).GetComponent<ButtonBuilding>();
                     button.SetButton(data);

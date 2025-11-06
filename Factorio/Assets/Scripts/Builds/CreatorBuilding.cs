@@ -25,12 +25,18 @@ public class RessourceList
 
 public abstract class CreatorBuilding : Building
 {
+    #region Variables
+    
     // === PRODUCE ===
     [Header("Production Settings")]
     [SerializeField] protected ResourceData resourceData;
     [SerializeField] protected int amountPerProduce = 1;
     [SerializeField] protected int maxStoredResources = 10;
     protected readonly List<Resource> storedResources = new();
+    
+    [Header("Production Time Settings")]
+    [SerializeField] protected float productionInterval = 1f;
+
 
     // === INPUT CHECKS ===
     [Header("Inputs Checks")]
@@ -48,7 +54,7 @@ public abstract class CreatorBuilding : Building
     [Header("Transfer Settings")]
     [SerializeField] protected float transferDelay = 0.35f;
     protected bool isTransferring = false;
-
+    
     public int StoredCount => storedResources.Count;
     public int MaxStored => maxStoredResources;
 
@@ -58,6 +64,8 @@ public abstract class CreatorBuilding : Building
 
     protected void TryPullResources()
     {
+        bool updated = false;
+
         foreach (var check in inputChecks)
         {
             if (check.CheckArea == null) continue;
@@ -77,9 +85,7 @@ public abstract class CreatorBuilding : Building
                     continue;
 
                 RessourceList targetList = inputResources.Find(r => r.ressourceNeeded == resource.scriptable.resourceName);
-                if (targetList == null) continue;
-
-                if (targetList.resources.Count >= targetList.maxCapacity)
+                if (targetList == null || targetList.resources.Count >= targetList.maxCapacity)
                     continue;
 
                 conv.RemoveResource(resource);
@@ -87,9 +93,13 @@ public abstract class CreatorBuilding : Building
 
                 float speed = conv.speed;
                 StartCoroutine(MoveResourceTo(resource, check.SpawnArea != null ? check.SpawnArea.position : transform.position, speed));
+                updated = true;
             }
         }
+
+        if (updated) UpdateStoredRessourcesRef();
     }
+
 
     protected IEnumerator MoveResourceTo(Resource resource, Vector3 targetPos, float speed)
     {
@@ -105,7 +115,85 @@ public abstract class CreatorBuilding : Building
     protected bool CanProduce =>
         storedResources.Count < maxStoredResources &&
         inputResources.TrueForAll(r => r.resources.Count >= r.quantityNeeded);
+    
+    #endregion
+    
+    #region Ref
 
+    [NonSerialized] public Ref<float> timerRef;
+    [NonSerialized] public Ref<float> protductionIntervalRef;
+    
+    [NonSerialized] public Ref<Dictionary<ResourceData, int>> storedResourcesRef;
+    [NonSerialized] public Ref<Dictionary<ResourceData, int>> capacityResourcesRef;
+    
+    #endregion
+
+    #region UI
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        timerRef = new Ref<float>(0);
+        protductionIntervalRef = new Ref<float>(productionInterval);
+
+        storedResourcesRef = new Ref<Dictionary<ResourceData, int>>(new());
+        capacityResourcesRef = new Ref<Dictionary<ResourceData, int>>(new());
+    }
+    
+    protected void UpdateStoredRessourcesRef()
+    {
+        var dict = new Dictionary<ResourceData, int>();
+        var capDict = new Dictionary<ResourceData, int>();
+
+        // === Ajoute la ressource produite ===
+        if (resourceData != null)
+        {
+            dict[resourceData] = storedResources.Count;
+            capDict[resourceData] = maxStoredResources;
+        }
+
+        // === Ajoute les ressources d’entrée ===
+        foreach (var input in inputResources)
+        {
+            // On essaie de récupérer le ResourceData à partir du contenu actuel
+            ResourceData data = null;
+
+            if (input.resources.Count > 0)
+            {
+                // On récupère le scriptable depuis la première ressource du stock
+                data = input.resources[0].scriptable;
+            }
+            else
+            {
+                continue;
+            }
+
+            if (data == null) continue;
+
+            dict[data] = input.resources.Count;
+            capDict[data] = input.maxCapacity;
+        }
+
+        storedResourcesRef.Value = dict;
+        capacityResourcesRef.Value = capDict;
+    }
+
+
+
+
+    protected override void CreateBuildingModules()
+    {
+        base.CreateBuildingModules();
+        
+        modules.Add(CreateSliderModule(timerRef, protductionIntervalRef, true, Color.orange, Color.yellow, resourceData.sprite));
+        modules.Add(CreateRessourcesModule(storedResourcesRef, capacityResourcesRef));
+    }
+    
+    #endregion
+
+
+    #region Production
     protected virtual void TryProduce()
     {
         if (!CanProduce)
@@ -122,6 +210,8 @@ public abstract class CreatorBuilding : Building
             newRes.gameObject.SetActive(false);
             storedResources.Add(newRes);
         }
+        
+        UpdateStoredRessourcesRef();
     }
 
     protected virtual Resource SpawnResource(ResourceData data, Vector3 pos)
@@ -157,10 +247,10 @@ public abstract class CreatorBuilding : Building
             resource.gameObject.SetActive(true);
             resource.transform.position = target.spawnPos != null ? target.spawnPos.position : target.transform.position;
             target.AddResource(resource);
+            UpdateStoredRessourcesRef();
 
             yield return new WaitForSeconds(transferDelay);
         }
-
         isTransferring = false;
     }
 
@@ -189,6 +279,8 @@ public abstract class CreatorBuilding : Building
 
         return validConveyors[UnityEngine.Random.Range(0, validConveyors.Count)];
     }
+    
+    #endregion
 
     protected virtual void OnDestroy()
     {

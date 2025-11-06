@@ -3,7 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Building/BuildingData")]
 public class BuildingData : ScriptableObject
 {
-    public string buildingName;
+    [SerializeField] string buildingName;
+    public string BuildingName => buildingName;
     public GameObject prefab;
     public Sprite iconSprite;
     public Sprite ghostSprite; // sprite to show before construct

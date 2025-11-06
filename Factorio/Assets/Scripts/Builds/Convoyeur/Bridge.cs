@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Bridge : Conveyor
 {
     public enum BridgeState
@@ -31,9 +31,12 @@ public class Bridge : Conveyor
     private Bridge linkedBridge;
     private Bridge detectedBridge;
     
+    public List<Bridge> connectedBridges = new();
+    
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         currentState = BridgeState.Research;
 
         // S'assurer que le LineRenderer est désactivé au départ
@@ -44,7 +47,11 @@ public class Bridge : Conveyor
     protected override void Update()
     {
         base.Update();
+        BehaviourByState();
+    }
 
+    private void BehaviourByState()
+    {
         switch (currentState)
         {
             case BridgeState.Research:
@@ -105,8 +112,10 @@ public class Bridge : Conveyor
                     nextConveyor = neighborBridge;
 
                     currentState = BridgeState.Bridge;
-
+                    
+                    neighborBridge.connectedBridges.Add(this);
                     neighborBridge.OnLinkedByBridge(this);
+                    
                     break;
                 }
             }
@@ -157,11 +166,8 @@ public class Bridge : Conveyor
 
     private void ResetBridgeConnection()
     {
-        linkedBridge = null;
-        nextConveyor = null;
-        detectedBridge = null;
-        currentState = BridgeState.Research;
-        UpdateBridgeLine(false);
+        if (connectedBridges.Count == 0)
+            currentState = BridgeState.Research;
     }
 
     public override bool AddResource(Resource resource)
@@ -194,8 +200,12 @@ public class Bridge : Conveyor
     protected override void OnDestroy()
     {
         base.OnDestroy();
+
         if (linkedBridge != null)
+        {
+            linkedBridge.connectedBridges.Remove(this);
             linkedBridge.ResetBridgeConnection();
+        }
 
         UpdateBridgeLine(false);
     }

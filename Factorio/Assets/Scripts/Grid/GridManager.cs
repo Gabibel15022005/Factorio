@@ -82,6 +82,9 @@ public class GridManager : MonoBehaviour
 
         GameObject obj = Instantiate(data.prefab);
         Building building = obj.GetComponent<Building>();
+
+        building.nameRef.Value = data.BuildingName;
+        
         if (!building)
         {
             Debug.LogError("Le prefab doit contenir un composant Building !");

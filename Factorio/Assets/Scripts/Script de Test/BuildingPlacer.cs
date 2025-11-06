@@ -216,7 +216,8 @@ public class BuildingPlacer : MonoBehaviour
         if (gridManager.CanPlaceBuilding(gridPos, buildingToPlace))
         {
             Building building = gridManager.PlaceBuilding(buildingToPlace, gridPos, rotation);
-
+            
+                
             // 🧭 Définir la direction selon la rotation
             if (building != null && building.facingDirection != Direction.Any)
             {

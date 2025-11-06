@@ -1,34 +1,58 @@
-using Unity.VisualScripting;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+
 public abstract class Building : MonoBehaviour
 {
-    #region  Variables
-
+    #region Variables
+    
     [Header("Health Variables")]
-    [SerializeField] private int maxHp = 10;
-    [SerializeField] private int hp;
-    public int Hp => hp;
-
+    [SerializeField] private float initialMaxHp = 10;
+    private float initialHp = 10;
+    public float Hp => hpRef.Value;
 
     [Space(20)]
     [Header("Grid Variables")]
     protected GridManager gridManagerRef;
-    protected Vector2Int buildingSize = Vector2Int.one; // par défaut 1x1
+    protected Vector2Int buildingSize = Vector2Int.one;
 
     [Space(20)]
     [Header("Refresh nearby Variable")]
-    [SerializeField] Vector2 refreshRange = new Vector2(2,2);
+    [SerializeField] Vector2 refreshRange = new Vector2(2, 2);
     public Color refreshRangeColor = Color.red;
 
     [Space(20)]
     [Header("Direction Variable")]
     public Direction facingDirection;
-    
-    
+
+    protected List<BuildingUIModule> modules = new();
 
     #endregion
-    protected virtual void Start() { hp = maxHp; }
+
+    #region Refs
+
+    // Les Ref<T> pour les modules UI
+    [NonSerialized] public Ref<string> nameRef;
+    [NonSerialized] public Ref<float> hpRef;
+    [NonSerialized] public Ref<float> maxHpRef;
+
+    #endregion
+    
+    protected virtual void Awake()
+    {
+        // Création des Ref<T> à partir des valeurs initiales
+        nameRef = new Ref<string>();
+        hpRef = new Ref<float>(initialHp);
+        maxHpRef = new Ref<float>(initialMaxHp);
+    }
+
+    protected virtual void Start()
+    {
+        hpRef.Value = maxHpRef.Value;
+    }
+
     public void SetGridManagerRef(GridManager refGrid) { gridManagerRef = refGrid; }
+
     public virtual void DestroyBuilding()
     {
         Debug.Log($"Destroy : {gameObject.name}");
@@ -36,20 +60,23 @@ public abstract class Building : MonoBehaviour
     }
 
     #region Health Function
+
     public virtual void TakeDamage(int damage)
     {
-        hp -= damage;
-        if (hp <= 0) DestroyBuilding();
+        hpRef.Value -= damage;
+        if (hpRef.Value <= 0) DestroyBuilding();
     }
+
     public virtual void Heal(int heal)
     {
-        hp += heal;
-        if (hp > maxHp) hp = maxHp;
+        hpRef.Value += heal;
+        if (hpRef.Value > maxHpRef.Value) hpRef.Value = maxHpRef.Value;
     }
-    
+
     #endregion
 
     #region Refresh Function
+
     public virtual void RefreshNeighbors()
     {
         if (gridManagerRef == null) return;
@@ -64,7 +91,6 @@ public abstract class Building : MonoBehaviour
             if (coll.TryGetComponent(out Building building))
             {
                 building.Refresh();
-                //Debug.Log($"Refreh : {building.gameObject.name}");
             }
         }
     }
@@ -72,14 +98,16 @@ public abstract class Building : MonoBehaviour
     public abstract void Refresh();
 
     #endregion
-    
+
     #region BuildingSize Function
+
     public void SetBuildingSize(Vector2Int size) { buildingSize = size; }
     public Vector2Int GetBuildingSize() { return buildingSize; }
-    
+
     #endregion
-    
+
     #region Direction
+
     public bool IsOpposingDirection(Direction otherDir, Direction dirToOther)
     {
         if (facingDirection == Direction.Any)
@@ -104,18 +132,103 @@ public abstract class Building : MonoBehaviour
             _ => Direction.Any
         };
     }
-    
+
     #endregion
 
     #region UI
 
-    protected virtual void ShowBuildingUI()
+    public virtual void ShowBuildingModules()
     {
         BuildingUI.SendBuildingScript?.Invoke(this);
     }
-    
-    #endregion
 
+    public List<BuildingUIModule> GetBuildingModules()
+    {
+        if (modules.Count == 0)
+        {
+            CreateBuildingModules();
+        }
+
+        return modules;
+    }
+
+    protected virtual void CreateBuildingModules()
+    {
+        if (modules.Count != 0) return;
+
+        modules.Add(CreateNameModule());
+
+        modules.Add(CreateSliderModule(hpRef, maxHpRef,false));
+    }
+
+    protected virtual NameUIModule CreateNameModule()
+    {
+        var nameModule = new NameUIModule
+        {
+            nameRef = nameRef
+        };
+        return nameModule;
+    }
+    protected virtual RessourcesUIModule CreateRessourcesModule(
+        Ref<Dictionary<ResourceData, int>> storedRef,
+        Ref<Dictionary<ResourceData, int>> capacityRef)
+    {
+        var ressourceModule = new RessourcesUIModule
+        {
+            storedResourcesRef = storedRef,
+            capacityResourcesRef = capacityRef
+        };
+        return ressourceModule;
+    }
+
+    protected virtual SliderUIModule CreateSliderModule(Ref<float> progressRef,Ref<float> maxProgressRef, bool isPercentage)
+    {
+        var sliderModule = new SliderUIModule
+        {
+            sliderValueRef = progressRef,
+            maxValueRef = maxProgressRef
+        };
+        sliderModule.isPercent = isPercentage;
+        return sliderModule;
+    }
+    
+    protected virtual SliderUIModule CreateSliderModule(Ref<float> progressRef,Ref<float> maxProgressRef, bool isPercentage, Color background, Color fill)
+    {
+        var sliderModule = new SliderUIModule
+        {
+            sliderValueRef = progressRef,
+            maxValueRef = maxProgressRef
+        };
+        sliderModule.isPercent = isPercentage;
+
+        sliderModule.changeSliderColor = true;
+        
+        sliderModule.backgroundColor = background;
+        sliderModule.fillColor = fill;
+        
+        return sliderModule;
+    }
+    
+    protected virtual SliderUIModule CreateSliderModule(Ref<float> progressRef,Ref<float> maxProgressRef, bool isPercentage, Color background, Color fill ,Sprite sprite)
+    {
+        var sliderModule = new SliderUIModule
+        {
+            sliderValueRef = progressRef,
+            maxValueRef = maxProgressRef
+        };
+        sliderModule.isPercent = isPercentage;
+
+        sliderModule.changeSliderColor = true;
+        
+        sliderModule.ressourceSprite =  sprite;
+        sliderModule.backgroundColor = background;
+        sliderModule.fillColor = fill;
+        
+        return sliderModule;
+    }
+
+    #endregion
+    
     protected virtual void OnDrawGizmos()
     {
         if (refreshRange == Vector2.zero) return;

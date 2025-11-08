@@ -5,7 +5,10 @@ using UnityEngine;
 public abstract class Building : MonoBehaviour
 {
     #region Variables
+    [Header("Scriptable")]
+    public BuildingData data;
     
+    [Space(30)]
     [Header("Health Variables")]
     [SerializeField] private float initialMaxHp = 10;
     private float initialHp = 10;
@@ -137,7 +140,7 @@ public abstract class Building : MonoBehaviour
 
     #region UI
 
-    public virtual void ShowBuildingModules()
+    public void ShowBuildingModules()
     {
         BuildingUI.SendBuildingScript?.Invoke(this);
     }

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
-
+    
+    public List<RessourceCount> startingRessources = new();
     // Dictionnaire : ResourceData → quantité
     private Dictionary<ResourceData, int> resources = new();
 
@@ -20,6 +21,14 @@ public class InventoryManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        foreach (RessourceCount res in startingRessources)
+        {
+            AddResource(res.resource, res.count);
+        }
     }
 
     /// <summary>

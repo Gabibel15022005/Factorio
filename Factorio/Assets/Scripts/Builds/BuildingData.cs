@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Building/BuildingData")]
 public class BuildingData : ScriptableObject
@@ -10,5 +11,7 @@ public class BuildingData : ScriptableObject
     public Sprite ghostSprite; // sprite to show before construct
     public Vector2Int size = Vector2Int.one; // width x height [Header("Placement")]
     public TileType[] allowedTiles = new TileType[] { TileType.Normal }; 
+    public List<RessourceCount> cost;
+    public bool canBeRefound = true;
 
 }

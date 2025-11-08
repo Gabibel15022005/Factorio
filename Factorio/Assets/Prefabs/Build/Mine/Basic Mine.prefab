@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636bdff200cab504ebc0a5a9641e4a7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Miner
+  data: {fileID: 11400000, guid: bb7a2b0bb6ad5bd46aa120404f9ab0b3, type: 2}
   initialMaxHp: 10
   refreshRange: {x: 3, y: 3}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}

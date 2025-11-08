@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Electricity
   m_EditorClassIdentifier: Assembly-CSharp::Category
   category: 3
-  categorySprite: {fileID: 21300000, guid: 334b0c5a2da656f4a9d2fe6b658cfd68, type: 3}
-  buildingsOfCategory: []
+  categorySprite: {fileID: 21300000, guid: 3233afe4c448d4eb198cfb1ca54feb3b, type: 3}
+  buildingsOfCategory:
+  - {fileID: 11400000, guid: dd404f495baabb04f9b085ce20557d8a, type: 2}

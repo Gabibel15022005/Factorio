@@ -548,19 +548,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6417608195311459667, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
       propertyPath: m_Name
-      value: Blood Factory
+      value: Gold Factory
       objectReference: {fileID: 0}
     - target: {fileID: 8930540014953320612, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
       propertyPath: m_Color.b
-      value: 0.15294115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8930540014953320612, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
       propertyPath: m_Color.g
-      value: 0.52500415
+      value: 0.9160187
       objectReference: {fileID: 0}
     - target: {fileID: 8930540014953320612, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
       propertyPath: m_Color.r
-      value: 0.7921569
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8930540014953320612, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
       propertyPath: m_SortingOrder
@@ -633,7 +633,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6339113940388433381, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
     - {fileID: 4477304516214605717, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
-    - {fileID: -5747161017419463647, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 9093191160931868241, guid: e4bc32f159417a44e91d6d8fccb4b9d8, type: 3}
@@ -670,11 +669,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1bccccfb5b7594b9e86fc7ab098e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Factory
+  data: {fileID: 11400000, guid: 7a9ba9c8759266a408edc6e00d0f49fa, type: 2}
   initialMaxHp: 10
   refreshRange: {x: 3, y: 3}
   refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
   facingDirection: 0
-  resourceData: {fileID: 11400000, guid: 850791c02adffd2469b9e7494ff6fcdd, type: 2}
+  resourceData: {fileID: 11400000, guid: 6dc733ebe03ee0549b4d4c9833214ee5, type: 2}
   amountPerProduce: 1
   maxStoredResources: 10
   productionInterval: 1
@@ -684,12 +684,12 @@ MonoBehaviour:
   - checkArea: {fileID: 3060306235078690036}
     spawnArea: {fileID: 4811881885214974300}
   inputResources:
-  - ressourceNeeded: 2
+  - ressourceNeeded: 0
     quantityNeeded: 1
     maxCapacity: 10
     resources: []
   - ressourceNeeded: 1
-    quantityNeeded: 2
+    quantityNeeded: 1
     maxCapacity: 10
     resources: []
   inputInteractLayer:

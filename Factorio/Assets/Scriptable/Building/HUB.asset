@@ -18,3 +18,9 @@ MonoBehaviour:
   ghostSprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   size: {x: 4, y: 4}
   allowedTiles: 01000000
+  cost:
+  - resource: {fileID: 11400000, guid: 42230398000f7944e8d5399e9c347b44, type: 2}
+    count: 10000
+  - resource: {fileID: 11400000, guid: 5cf85427b5306b94e82cbbabc31e0b12, type: 2}
+    count: 10000
+  canBeRefound: 0

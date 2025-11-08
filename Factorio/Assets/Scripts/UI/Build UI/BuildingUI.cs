@@ -41,7 +41,8 @@ public class BuildingUI : MonoBehaviour
             }
             currentUIs.Clear();
         }
-        else
+
+        if (buildingScript != null)
         {
             if (Input.GetKeyDown(KeyCode.T)) // test damage
             {

@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9093191160931868241}
   - component: {fileID: 8930540014953320612}
-  - component: {fileID: 6339113940388433381}
   - component: {fileID: 7137079720321065537}
-  - component: {fileID: 4477304516214605717}
-  - component: {fileID: -5747161017419463647}
+  - component: {fileID: 355740656072542881}
   m_Layer: 6
-  m_Name: Basic Conveyor
+  m_Name: Destruction Conveyor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,9 +81,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.8018868, g: 0.2614363, b: 0.21560162, a: 1}
+  m_Color: {r: 0.81055903, g: 0.8113208, b: 0.21048418, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -95,31 +93,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6339113940388433381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6417608195311459667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c615a310b762c304780416802afc4956, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Conveyor
-  initialMaxHp: 10
-  refreshRange: {x: 2, y: 2}
-  refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
-  facingDirection: 0
-  speed: 3
-  maxResources: 2
-  minDistanceBetweenResources: 0.75
-  canRessourceBeTaken: 1
-  nextConveyor: {fileID: 0}
-  spawnPos: {fileID: 0}
-  centerRange: 0.05
-  nextConvRange: 0.75
-  gizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!61 &7137079720321065537
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -166,29 +139,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!95 &4477304516214605717
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6417608195311459667}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2b06e42b19a8d8b4dac40f17b13e139c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-5747161017419463647
+--- !u!114 &355740656072542881
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,9 +148,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 6417608195311459667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4136d361c8beb2d48b878088c51af606, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a56cf6e8aee8344d89412fb44f56a7d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SyncAnimComponent
+  m_EditorClassIdentifier: Assembly-CSharp::Destruction
+  data: {fileID: 11400000, guid: 9140b03bbe0c35749898e105af1e67ff, type: 2}
+  initialMaxHp: 10
+  refreshRange: {x: 2, y: 2}
+  refreshRangeColor: {r: 1, g: 0, b: 0, a: 1}
+  facingDirection: 4
+  speed: 5
+  maxResources: 4
+  minDistanceBetweenResources: 0.5
+  canRessourceBeTaken: 1
+  nextConveyor: {fileID: 0}
+  spawnPos: {fileID: 0}
+  centerRange: 0.05
+  nextConvRange: 0.75
+  gizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &6708139737030864185
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,13 +190,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6708139737030864185}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_LocalScale: {x: 4.28, y: 4.28, z: 4.28}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9093191160931868241}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!212 &9075665589317462533
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -278,8 +243,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: f224bfd122877a34aa49c63693fc317b, type: 3}
+  m_SortingOrder: 11
+  m_Sprite: {fileID: 21300000, guid: 79aba0b290c471c4ba3d3f818d4e9b15, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 1

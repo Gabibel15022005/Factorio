@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cca02c75c8f87fa438355f6987cc74e8, type: 3}
-  m_Name: Basic Conveyor +
+  m_Name: Electric Generator
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: Basic Conveyor +
-  prefab: {fileID: 6417608195311459667, guid: 2309fb9b110543848941ec49d98688a8, type: 3}
-  iconSprite: {fileID: 21300000, guid: e80a0fe8059192c4d996bc01a6175712, type: 3}
+  buildingName: Electric Generator
+  prefab: {fileID: 4900979032594627301, guid: eba9bbfb15cdf4f489df105534b09c82, type: 3}
+  iconSprite: {fileID: 21300000, guid: 3233afe4c448d4eb198cfb1ca54feb3b, type: 3}
   ghostSprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   size: {x: 1, y: 1}
-  allowedTiles: 0100000003000000
+  allowedTiles: 01000000
   cost:
-  - resource: {fileID: 11400000, guid: 5cf85427b5306b94e82cbbabc31e0b12, type: 2}
-    count: 3
-  - resource: {fileID: 11400000, guid: 42230398000f7944e8d5399e9c347b44, type: 2}
-    count: 1
+  - resource: {fileID: 11400000, guid: 6dc733ebe03ee0549b4d4c9833214ee5, type: 2}
+    count: 10
   canBeRefound: 1

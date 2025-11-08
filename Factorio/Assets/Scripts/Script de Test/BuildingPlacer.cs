@@ -208,6 +208,8 @@ public class BuildingPlacer : MonoBehaviour
 
     void TryPlaceBuilding()
     {
+        if (!CheckIfHasRessourceCount()) return;
+        
         Vector2 mouseScreen = Mouse.current.position.ReadValue();
         Vector3 worldPos = cam.ScreenToWorldPoint(new Vector3(mouseScreen.x, mouseScreen.y, cam.nearClipPlane));
         worldPos.z = 0f;
@@ -215,8 +217,9 @@ public class BuildingPlacer : MonoBehaviour
 
         if (gridManager.CanPlaceBuilding(gridPos, buildingToPlace))
         {
-            Building building = gridManager.PlaceBuilding(buildingToPlace, gridPos, rotation);
+            PayBuildingCost();
             
+            Building building = gridManager.PlaceBuilding(buildingToPlace, gridPos, rotation);
                 
             // 🧭 Définir la direction selon la rotation
             if (building != null && building.facingDirection != Direction.Any)
@@ -227,6 +230,37 @@ public class BuildingPlacer : MonoBehaviour
             {
                 building.transform.rotation = new Quaternion(0,0,0,0);
             }
+        }
+    }
+
+    private bool CheckIfHasRessourceCount()
+    {
+        foreach (RessourceCount RC in  buildingToPlace.cost)
+        {
+            if (InventoryManager.Instance.GetCount(RC.resource) < RC.count) return false;
+        }
+        return true;
+    }
+
+    private void PayBuildingCost()
+    {
+        foreach (RessourceCount RC in  buildingToPlace.cost)
+        {
+            InventoryManager.Instance.RemoveResource(RC.resource, RC.count);
+        }
+    }
+    
+    private void RefoundBuildingCost(BuildingData data)
+    {
+        if (data == null)
+        {
+            Debug.LogError("Couldn't find building data");
+            return;
+        }
+        
+        foreach (RessourceCount RC in  data.cost)
+        {
+            InventoryManager.Instance.AddResource(RC.resource, RC.count);
         }
     }
 
@@ -252,10 +286,10 @@ public class BuildingPlacer : MonoBehaviour
 
         // Vérifie s’il y a un bâtiment à cette case
         Building building = gridManager.GetBuildingAt(gridPos);
-        if (building != null)
+        
+        if (building != null && building.data.canBeRefound)
         {
-
-            //Debug.Log($"Remove {building.gameObject.name}");
+            RefoundBuildingCost(building.data);
             gridManager.RemoveBuilding(building); // méthode à créer dans GridManager
         }
     }
